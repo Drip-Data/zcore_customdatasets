@@ -81,7 +81,7 @@ If you find this code useful, please consider citing our [paper](https://arxiv.o
 @article{griffin24zcore,
   title={Zero-Shot Coreset Selection: Efficient Pruning for Unlabeled Data},
   author={Griffin, Brent A and Marks, Jacob and Corso, Jason J},
-  journal={arXiv},
+  journal={arXiv preprint arXiv:2411.15349},
   year={2024}
 }
 ```
