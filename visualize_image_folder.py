@@ -1,9 +1,11 @@
 import argparse
-import fiftyone as fo
-import fiftyone.brain as fob
+import os
+
 import IPython
 import numpy as np
-import os
+
+import fiftyone as fo
+import fiftyone.brain as fob
 
 import core.coreset as cs
 
