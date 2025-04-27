@@ -27,6 +27,9 @@ def train_coreset_model(args, model, train_loader, test_loader):
     print_log(f"cudnn version : {torch.backends.cudnn.version()}", log)
 
     # Model setup.
+    # DataParallel 是 PyTorch 提供的一个用于分布式训练的模块，它可以将模型分布到多个 GPU 上进行训练。
+    # 在训练过程中，DataParallel 会自动将输入数据分配到多个 GPU 上，并行地进行前向传播和反向传播，最后将结果合并。
+    # 使用 DataParallel 可以显著提高训练速度，特别是在有多个 GPU 的情况下。
     model = torch.nn.DataParallel(model, device_ids=[args.device])
     model.to(args.device)
 
@@ -38,12 +41,12 @@ def train_coreset_model(args, model, train_loader, test_loader):
         weight_decay=state['decay'], 
         nesterov=True
     )
-    scheduler =  torch.optim.lr_scheduler.CosineAnnealingLR(
+    scheduler =  torch.optim.lr_scheduler.CosineAnnealingLR( # 使用余弦退火策略，lr 会从初始值逐渐下降到最小值，然后逐渐上升
         optimizer = optimizer,
-        T_max =  args.epochs * len(train_loader)
+        T_max =  args.epochs * len(train_loader) # 最大迭代次数
     )
-    criterion = torch.nn.CrossEntropyLoss()
-    criterion.to(args.device)
+    criterion = torch.nn.CrossEntropyLoss() 
+    criterion.to(args.device) 
     recorder = RecorderMeter(args)
     epoch_time = AverageMeter()
 
@@ -91,12 +94,23 @@ def train(args, model, train_loader, optimizer, scheduler, criterion, epoch, log
     for t, (model_input, target) in enumerate(train_loader):
         tic = time.time()
 
-        x = torch.autograd.Variable(model_input.to(args.device))
-        y = torch.autograd.Variable(target[0].to(args.device))
-        w = target[1].to(args.device)
-
-        output = model(x)
-        loss = criterion(output, y) * torch.mean(w)
+        # 检查target是否是一个元组（当使用我们的coreset加权样本时）
+        # 或者一个简单的张量（当使用我们的自定义COCO数据集时）
+        if isinstance(target, tuple) or (isinstance(target, list) and len(target) > 1 and isinstance(target[0], torch.Tensor)):
+            x = torch.autograd.Variable(model_input.to(args.device))
+            y = torch.autograd.Variable(target[0].to(args.device))
+            w = target[1].to(args.device)
+            
+            output = model(x)
+            loss = criterion(output, y) * torch.mean(w)
+        else:
+            # 对于标准数据集或没有权重的自定义COCO数据集
+            x = torch.autograd.Variable(model_input.to(args.device))
+            y = torch.autograd.Variable(target.to(args.device))
+            
+            output = model(x)
+            loss = criterion(output, y)
+            
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()

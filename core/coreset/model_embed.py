@@ -8,20 +8,28 @@ def load_fo_dataset(args):
     
     if "cifar" in args.dataset:
         dataset = foz.load_zoo_dataset(args.dataset, split="train")
-    else: 
-    
-        if args.dataset == "imagenet":
+    elif args.dataset == "imagenet":
             path = os.path.join(args.data_dir, "imagenet", "ILSVRC", "Data", 
                                 "CLS-LOC", "train")
-        elif "eurosat" in args.dataset:
-            path = os.path.join(args.data_dir, args.dataset, "train")
-        else:
-            raise ValueError(f"{args.dataset} not recognized.")
+            dataset = fo.Dataset.from_dir(
+             path, 
+             dataset_type=fo.types.ImageClassificationDirectoryTree
+            )
 
+    elif "eurosat" in args.dataset:
+            path = os.path.join(args.data_dir, args.dataset, "train")
+            dataset = fo.Dataset.from_dir(path, dataset_type=fo.types.ImageClassificationDirectoryTree)
+
+    elif args.dataset == "coco": # 增加纯图像数据集
+        path = os.path.join(args.data_dir, "coco", "train_single")
         dataset = fo.Dataset.from_dir(
             path, 
-            dataset_type=fo.types.ImageClassificationDirectoryTree
+            dataset_type=fo.types.ImageDirectory
         )
+    else:
+        raise ValueError(f"{args.dataset} not recognized.")
+
+
 
     return dataset
 
@@ -46,9 +54,9 @@ def generate_embedding(args, model_name, embed_file):
     model = load_fo_model(args, model_name)
 
     print(f"Generating {args.dataset}-{model_name} embeddings.")
-    model_embed = dataset.compute_embeddings(model)
+    model_embed = dataset.compute_embeddings(model) # 计算 dataset 中每个样本的 embedding
     os.makedirs(os.path.dirname(embed_file), exist_ok=True)
-    pickle.dump(model_embed, open(embed_file, "wb"))
+    pickle.dump(model_embed, open(embed_file, "wb")) # pickle.dump 是將 model_embed 序列化並保存到 embed_file 中
     print(f"Model embeddings saved at {embed_file}.")
    
     return model_embed

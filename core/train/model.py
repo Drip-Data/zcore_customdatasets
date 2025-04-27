@@ -9,6 +9,12 @@ def load_model(args, n_classes):
     elif args.architecture == "resnet34":
         model = torchvision.models.resnet34(pretrained=False, progress=True)
 
+    elif args.architecture == "resnet50":
+        model = torchvision.models.resnet50(pretrained=False, progress=True)
+
+    elif args.architecture == "resnet101":
+        model = torchvision.models.resnet101(pretrained=False, progress=True)
+
     else: 
         raise ValueError(f"{args.architecture} not recognized.")
 

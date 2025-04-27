@@ -73,6 +73,10 @@ wget -qO- https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/
 
 **EuroSAT80**, **EuroSAT40**, **EuroSAT20**, and **EuroSAT10** can be downloaded [here](https://www.dropbox.com/scl/fo/1mhwsunssr6g2v1wio0vq/AEI2cx3aZ2vWvFmSLDfUHtQ?rlkey=kbxo4uae43tnzvk6k7x5hk28u&st=8tkh3oyl&dl=0 "EuroSAT split download").
 
+## COCO and Custom datasets
+
+**COCO** 新增了COCO 2014年纯图片数据集，通过脚本 /data/coco/annotations/coco_single.py 提取单一便签的coco图片数据集进行分类检测
+
 ## Citation
 
 If you find this code useful, please consider citing our [paper](https://arxiv.org/pdf/2411.15349):

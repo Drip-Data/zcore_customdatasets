@@ -3,9 +3,10 @@ import numpy as np
 import os
 
 import core.coreset as cs
-
+#os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 def main(args):
 
+    
     exp_name, exp_file = cs.experiment_name(args)
     assert not os.path.exists(exp_file), f"{exp_file} already exists."
 
@@ -22,7 +23,7 @@ if __name__ == "__main__":
 
     # Dataset.
     dataset_choice = ["cifar10", "cifar100", "imagenet", "eurosat10", 
-                      "eurosat20", "eurosat40", "eurosat80"]
+                      "eurosat20", "eurosat40", "eurosat80", "coco", "custom"]
     parser.add_argument("--dataset", type=str, choices=dataset_choice)
     parser.add_argument("--data_dir", type=str)
     parser.add_argument("--results_dir", type=str)

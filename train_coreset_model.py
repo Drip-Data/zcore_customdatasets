@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # Dataset.
     dataset_choice = ["cifar10", "cifar100", "imagenet", "eurosat10", 
-                      "eurosat20", "eurosat40", "eurosat80"]
+                      "eurosat20", "eurosat40", "eurosat80", "coco"]
     parser.add_argument("--dataset", type=str, choices=dataset_choice)
     parser.add_argument("--data_dir", type=str)
     parser.add_argument("--results_dir", type=str)
@@ -25,8 +25,8 @@ if __name__ == "__main__":
                         choices=["cpu", "mps", "cuda"])
 
     # Model.
-    parser.add_argument("--architecture", type=str, default="resnet18")
-    parser.add_argument("--epochs", type=int, default=200)
+    parser.add_argument("--architecture", type=str, default="resnet34")
+    parser.add_argument("--epochs", type=int, default=180)
     parser.add_argument("--decay", type=float, default=0.0005)
     parser.add_argument("--learning_rate", type=float, default=0.1)
     parser.add_argument("--momentum", type=float, default=0.9)
